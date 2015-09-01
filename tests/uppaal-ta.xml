@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC "-//Uppaal Team//DTD Flat System 1.1//EN" "http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd">
+<nta>
+  <declaration>//inputs
+int[0,1] IN, RST;
+//outputs
+int[0,1] OUT, ON;
+
+//input sync channels
+broadcast chan chIN,chRST;
+
+//output sync channels
+broadcast chan chOUT,chON;
+</declaration>
+    <template>
+    <name x="5" y="5">iut</name>
+    
+    <declaration></declaration>
+    
+    <location id="id0" x="0" y="0">
+      <name y="15">id0</name>
+      
+      
+      
+      
+    </location>
+    
+    <init ref="id0" />
+    
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      <label kind="guard">IN==0</label>
+      <label kind="synchronisation">chIN?</label>
+      
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      <label kind="guard">IN==1</label>
+      <label kind="synchronisation">chIN?</label>
+      
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      <label kind="guard">RST==0</label>
+      <label kind="synchronisation">chRST?</label>
+      
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      <label kind="guard">RST==1</label>
+      <label kind="synchronisation">chRST?</label>
+      
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chOUT!</label>
+      <label kind="assignment">OUT:=0</label>
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chON!</label>
+      <label kind="assignment">ON:=0</label>
+      
+    </transition>
+  </template>
+  <template>
+    <name x="5" y="5">env</name>
+    
+    <declaration></declaration>
+    
+    <location id="id0" x="0" y="0">
+      <name y="15">id0</name>
+      
+      
+      
+      
+    </location>
+    
+    <init ref="id0" />
+    
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chOUT?</label>
+      
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chON?</label>
+      
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chIN!</label>
+      <label kind="assignment">IN:=0</label>
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chIN!</label>
+      <label kind="assignment">IN:=1</label>
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chRST!</label>
+      <label kind="assignment">RST:=0</label>
+      
+    </transition>
+
+    <transition>
+      <source ref="id0" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation">chRST!</label>
+      <label kind="assignment">RST:=1</label>
+      
+    </transition>
+  </template>
+
+  <system>system iut, env;
+</system>
+</nta>

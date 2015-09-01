@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+  <JOPCUACONF>
+    <SERVER>
+     <URI>opc.tcp://172.16.252.214:4840</URI>
+    </SERVER>
+    <CLOCK>
+        <LIMIT>6000</LIMIT>
+    </CLOCK>
+    <STIMPARMS>
+     <PARM id="1">
+       <TAG>Channel1.Device1.IN</TAG>
+       <TYPE>boolean</TYPE>
+     </PARM>
+     <PARM id="2">
+       <TAG>Channel1.Device1.RST</TAG>
+       <TYPE>boolean</TYPE>
+     </PARM>
+    </STIMPARMS>
+    <OBSPARMS>
+     <PARM>
+       <TAG>Channel1.Device1.OUT</TAG>
+       <TYPE>boolean</TYPE>
+     </PARM>
+     <PARM>
+       <TAG>Channel1.Device1.ON</TAG>
+       <TYPE>boolean</TYPE>
+     </PARM>
+    </OBSPARMS>
+    <RESETSTEPS>
+        <STEP id="1" clock="6000">
+            <TAG id="1" value="0"/>
+            <TAG id="2" value="0"/>
+        </STEP>
+        <STEP id="2" clock="1000">
+            <TAG id="1" value="0"/>
+            <TAG id="2" value="1"/>
+        </STEP>
+        <STEP id="3" clock="1000">
+            <TAG id="1" value="0"/>
+            <TAG id="2" value="0"/>
+        </STEP>
+    </RESETSTEPS>
+  </JOPCUACONF>
