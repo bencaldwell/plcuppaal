@@ -59,25 +59,60 @@ class plcuppaal:
 		transitions = []
 		for sym in self.inputs:
 			#false guard transition
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="in"+sym+"Off",
+											committed=True)
+			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation, 
-												target=initlocation,
+												target=location,
 												guard=sym+"==0",
 												synchronisation="ch"+sym+"?")
 			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location, 
+												target=initlocation)
+			transitions.append(transition)
 
 			#true guard transition
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="in"+sym+"On",
+											committed=True)
+			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation, 
-												target=initlocation,
+												target=location,
 												guard=sym+"==1",
 												synchronisation="ch"+sym+"?")
 			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location, 
+												target=initlocation)
+			transitions.append(transition)
 
 		for sym in self.outputs:
-			#assign a value to an output and sync
+			#assign a true value to an output and sync
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="out"+sym+"On",
+											committed=True)
+			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation,
-												target=initlocation,
+												target=location,
+												assignment=sym+":=1",
+												synchronisation="ch"+sym+"!")
+			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location,
+												target=initlocation)
+			transitions.append(transition)
+
+			#assign a false value to an output and sync
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="out"+sym+"Off",
+											committed=True)
+			locations.append(location)
+			transition = pyuppaal.Transition(	source=initlocation,
+												target=location,
 												assignment=sym+":=0",
 												synchronisation="ch"+sym+"!")
+			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location,
+												target=initlocation)
 			transitions.append(transition)
 
 		template = pyuppaal.Template(	templatename,
@@ -100,23 +135,58 @@ class plcuppaal:
 		#create a transition for each output with "ch<output>?" sync
 		transitions = []
 		for sym in self.outputs:
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="out"+sym+"On",
+											committed=True)
+			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation, 
-												target=initlocation,
+												target=location,
+												guard=sym+"==1",
 												synchronisation="ch"+sym+"?")
+			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location, 
+												target=initlocation)
+			transitions.append(transition)
+
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="out"+sym+"Off",
+											committed=True)
+			locations.append(location)
+			transition = pyuppaal.Transition(	source=initlocation, 
+												target=location,
+												guard=sym+"==0",
+												synchronisation="ch"+sym+"?")
+			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location, 
+												target=initlocation)
 			transitions.append(transition)
 
 		for sym in self.inputs:
 			#assign a value to an output and sync
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="in"+sym+"Off",
+											committed=True)
+			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation,
-												target=initlocation,
+												target=location,
 												assignment=sym+":=0",
 												synchronisation="ch"+sym+"!")
 			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location,
+												target=initlocation)
+			transitions.append(transition)
 
+			#create a committed location simply to spread the graph out
+			location = pyuppaal.Location(	name="in"+sym+"On",
+											committed=True)
+			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation,
-												target=initlocation,
+												target=location,
 												assignment=sym+":=1",
 												synchronisation="ch"+sym+"!")
+			transitions.append(transition)
+			transition = pyuppaal.Transition(	source=location,
+												target=initlocation)
 			transitions.append(transition)
 
 		template = pyuppaal.Template(	templatename,
