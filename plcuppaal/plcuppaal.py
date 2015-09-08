@@ -3,6 +3,7 @@ import pyuppaal
 import sys
 import re
 import xml.etree.ElementTree as ET
+import argparse
 
 class plcuppaal:
 	"""plcuppaal converts an xml configuration file to a base Uppaal TA system.
@@ -27,7 +28,7 @@ class plcuppaal:
 							declaration=self.globaldeclaration,
 							system=self.systemdeclaration)
 
-		file=open(outputfile, 'w')
+		file=open(self.outputfile, 'w')
 		file.write(nta.to_xml())
 		file.close()
 
@@ -226,9 +227,11 @@ class plcuppaal:
 		self.globaldeclaration =  ''.join(declitems)
 
 if __name__ == "__main__":
-	dir = os.path.dirname(__file__)
-	outputfile = os.path.join(dir, '../tests/uppaal-ta.xml')
-	configfile = os.path.join(dir, '../tests/config.xml')
-	p = plcuppaal(configfile=configfile, outputfile=outputfile)
+	parser = argparse.ArgumentParser()
+	parser.add_argument("configfile", help="the plc software configuration file")
+	parser.add_argument("outputfile", help="the file to write the uppaal ta into")
+	args = parser.parse_args()
+	print args
+	p = plcuppaal(configfile=args.configfile, outputfile=args.outputfile)
 	p.create()
 	

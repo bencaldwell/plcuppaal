@@ -1,4 +1,4 @@
-from setuptools import setup
+from distutils.core import setup
 
 setup(name='plcuppaal',
     version='0.1',
@@ -8,5 +8,5 @@ setup(name='plcuppaal',
     author_email='benny.caldwell@gmail.com',
     license='GPL-2',
     packages=['plcuppaal'],
-    install_requires=['pyuppaal'],
-    zip_safe=False)
+    requires=['pyuppaal']
+    )
