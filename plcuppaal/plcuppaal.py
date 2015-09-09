@@ -16,14 +16,16 @@ class plcuppaal:
 		self.templates = []
 		self.iutname = "iut"
 		self.envname = "env"
+		self.dlyname = "dly"
 
 	def create(self):
 		self.parse_config_file()
 		self.append_iut_template()
 		self.append_env_template()
+		self.append_buffer_template()
 		self.append_global_declarations()
+		self.append_system_declarations()
 
-		self.systemdeclaration = "system {}, {};\r\n".format(self.iutname, self.envname)
 		nta = pyuppaal.NTA(	templates=self.templates,
 							declaration=self.globaldeclaration,
 							system=self.systemdeclaration)
@@ -48,6 +50,39 @@ class plcuppaal:
 			tokens = re.split(r"\.", sym.text) # split the input tag into dot hierarchy and just use the last component as the tag
 			self.outputs.append(tokens[-1])
 
+	def append_buffer_template(self):
+		templatename = self.dlyname
+
+		transitions = []
+		locations = []
+		initlocation = pyuppaal.Location(name="idle")
+		locations.append(initlocation)
+		delaylocation = pyuppaal.Location(	name="in_transit",
+											invariant="x<=DELAY")
+		locations.append(delaylocation)
+
+		transition = pyuppaal.Transition(	source=initlocation, 
+											target=delaylocation,
+											assignment="x:=0",
+											synchronisation="in?")
+		transitions.append(transition)
+
+		transition = pyuppaal.Transition(	source=delaylocation, 
+											target=initlocation,
+											synchronisation="out!")
+		transitions.append(transition)
+
+		template = pyuppaal.Template(	templatename,
+										initlocation=initlocation,
+										locations=locations,
+										transitions=transitions,
+										declaration="clock x;",
+										parameter="broadcast chan &in, broadcast chan &out")
+		template.assign_ids()
+		template.layout()
+		self.templates.append(template)
+
+
 	def append_iut_template(self):
 		templatename=self.iutname
     	
@@ -56,7 +91,9 @@ class plcuppaal:
 		initlocation = pyuppaal.Location(name="id0")
 		locations.append(initlocation)
 
-		#create a transition for each input with "ch<input>?" sync
+		#create a transition for each input with "ch<input>iut?" sync
+		#two sets of channels exists, those used by the environment "ch<input>" and those used by the iut "ch<input>iut"
+		#the iut channels are delayed through a buffer template to model the adapter latency
 		transitions = []
 		for sym in self.inputs:
 			#false guard transition
@@ -67,7 +104,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==0",
-												synchronisation="ch"+sym+"?")
+												synchronisation="ch"+sym+"iut?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -81,7 +118,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==1",
-												synchronisation="ch"+sym+"?")
+												synchronisation="ch"+sym+"iut?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -96,7 +133,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=1",
-												synchronisation="ch"+sym+"!")
+												synchronisation="ch"+sym+"iut!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -110,7 +147,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=0",
-												synchronisation="ch"+sym+"!")
+												synchronisation="ch"+sym+"iut!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -200,31 +237,61 @@ class plcuppaal:
 
 	def append_global_declarations(self):
 		declitems = []
-		declitems.append("//inputs\r\n")
+		
+		declitems.append("//constants\r")
+		declitems.append("const int DELAY = 1000;\r\n")
+
+		declitems.append("//inputs\r")
 		declitems.append("int[0,1] ")
 		for sym in self.inputs[:-1]:
 			declitems.append(sym + ", ")
 		declitems.append(self.inputs[-1] + ";\r\n")
 
-		declitems.append("//outputs\r\n")
+		declitems.append("//outputs\r")
 		declitems.append("int[0,1] ")
 		for sym in self.outputs[:-1]:
 			declitems.append(sym + ", ")
 		declitems.append(self.outputs[-1] + ";\r\n")
         
-		declitems.append("\r\n//input sync channels\r\n")
+		declitems.append("//input sync channels\r")
 		declitems.append("broadcast chan ")
 		for sym in self.inputs[:-1]:
-			declitems.append("ch"+sym+",")
-		declitems.append("ch"+self.inputs[-1]+";\r\n")
+			declitems.append("ch"+sym+","+"ch"+sym+"iut,")
+		declitems.append("ch"+self.inputs[-1]+","+"ch"+self.inputs[-1]+"iut"+";\r\n")
 
-		declitems.append("\r\n//output sync channels\r\n")
+		declitems.append("//output sync channels\r")
 		declitems.append("broadcast chan ")
 		for sym in self.outputs[:-1]:
-			declitems.append("ch"+sym+",")
-		declitems.append("ch"+self.outputs[-1]+";\r\n")
+			declitems.append("ch"+sym+","+"ch"+sym+"iut,")
+		declitems.append("ch"+self.outputs[-1]+","+"ch"+self.outputs[-1]+"iut"+";\r\n")
         
 		self.globaldeclaration =  ''.join(declitems)
+
+	def append_system_declarations(self):
+		declitems = []
+		declitems.append("//delay buffers\r")
+		delaybuffers = []
+		for sym in self.inputs:
+			buffname = sym + "dly"
+			declitems.append(buffname + " = " + self.dlyname + "(ch" + sym + ",ch"+sym+"iut);\r")
+			delaybuffers.append(buffname)
+
+		for sym in self.outputs:
+			buffname = sym + "dly"
+			declitems.append(buffname + " = " + self.dlyname + "(ch" + sym + ",ch"+sym+"iut);\r")
+			delaybuffers.append(buffname)
+
+		declitems.append("\r//templates in the system\r")
+		declitems.append("system ")
+		declitems.append(self.envname)
+		declitems.append(",")
+		declitems.append(self.iutname)
+		for buff in delaybuffers:
+			declitems.append(",")
+			declitems.append(buff)
+		declitems.append(";\r\n")
+		
+		self.systemdeclaration = ''.join(declitems)
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()

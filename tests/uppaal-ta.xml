@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE nta PUBLIC "-//Uppaal Team//DTD Flat System 1.1//EN" "http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd">
 <nta>
-  <declaration>//inputs
-int[0,1] IN, RST;
-//outputs
-int[0,1] OUT, ON;
-
-//input sync channels
-broadcast chan chIN,chRST;
-
-//output sync channels
-broadcast chan chOUT,chON;
+  <declaration>//constantsconst int DELAY = 1000;
+//inputsint[0,1] IN, RST;
+//outputsint[0,1] OUT, ON;
+//input sync channelsbroadcast chan chIN,chINiut,chRST,chRSTiut;
+//output sync channelsbroadcast chan chOUT,chOUTiut,chON,chONiut;
 </declaration>
     <template>
     <name x="5" y="5">iut</name>
     
     <declaration></declaration>
     
-    <location id="id0" x="-556" y="-228">
-      <name x="-556" y="-213">id0</name>
+    <location id="id0" x="-609" y="-228">
+      <name x="-609" y="-213">id0</name>
       
       
       
@@ -33,56 +28,56 @@ broadcast chan chOUT,chON;
       
     </location>
 
-    <location id="id2" x="-166" y="-27">
-      <name x="-166" y="-12">inINOn</name>
+    <location id="id2" x="-181" y="-27">
+      <name x="-181" y="-12">inINOn</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id3" x="-301" y="-27">
-      <name x="-301" y="-12">inRSTOff</name>
+    <location id="id3" x="-331" y="-27">
+      <name x="-331" y="-12">inRSTOff</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id4" x="-447" y="-27">
-      <name x="-447" y="-12">inRSTOn</name>
+    <location id="id4" x="-492" y="-27">
+      <name x="-492" y="-12">inRSTOn</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id5" x="-591" y="-27">
-      <name x="-591" y="-12">outOUTOn</name>
+    <location id="id5" x="-652" y="-27">
+      <name x="-652" y="-12">outOUTOn</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id6" x="-732" y="-27">
-      <name x="-732" y="-12">outOUTOff</name>
+    <location id="id6" x="-813" y="-27">
+      <name x="-813" y="-12">outOUTOff</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id7" x="-865" y="-27">
-      <name x="-865" y="-12">outONOn</name>
+    <location id="id7" x="-967" y="-27">
+      <name x="-967" y="-12">outONOn</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id8" x="-1030" y="-27">
-      <name x="-1030" y="-12">outONOff</name>
+    <location id="id8" x="-1150" y="-27">
+      <name x="-1150" y="-12">outONOff</name>
       
       
       <committed />
@@ -96,7 +91,7 @@ broadcast chan chOUT,chON;
       <target ref="id1" />
       
       <label kind="guard" x="-61" y="-112">IN==0</label>
-      <label kind="synchronisation" x="-61" y="-97">chIN?</label>
+      <label kind="synchronisation" x="-61" y="-97">chINiut?</label>
       
       
     </transition>
@@ -115,8 +110,8 @@ broadcast chan chOUT,chON;
       <source ref="id0" />
       <target ref="id2" />
       
-      <label kind="guard" x="-187" y="-112">IN==1</label>
-      <label kind="synchronisation" x="-187" y="-97">chIN?</label>
+      <label kind="guard" x="-202" y="-112">IN==1</label>
+      <label kind="synchronisation" x="-202" y="-97">chINiut?</label>
       
       
     </transition>
@@ -135,8 +130,8 @@ broadcast chan chOUT,chON;
       <source ref="id0" />
       <target ref="id3" />
       
-      <label kind="guard" x="-323" y="-112">RST==0</label>
-      <label kind="synchronisation" x="-323" y="-97">chRST?</label>
+      <label kind="guard" x="-353" y="-112">RST==0</label>
+      <label kind="synchronisation" x="-353" y="-97">chRSTiut?</label>
       
       
     </transition>
@@ -155,8 +150,8 @@ broadcast chan chOUT,chON;
       <source ref="id0" />
       <target ref="id4" />
       
-      <label kind="guard" x="-468" y="-112">RST==1</label>
-      <label kind="synchronisation" x="-468" y="-97">chRST?</label>
+      <label kind="guard" x="-513" y="-112">RST==1</label>
+      <label kind="synchronisation" x="-513" y="-97">chRSTiut?</label>
       
       
     </transition>
@@ -176,8 +171,8 @@ broadcast chan chOUT,chON;
       <target ref="id5" />
       
       
-      <label kind="synchronisation" x="-612" y="-97">chOUT!</label>
-      <label kind="assignment" x="-612" y="-82">OUT:=1</label>
+      <label kind="synchronisation" x="-674" y="-97">chOUTiut!</label>
+      <label kind="assignment" x="-674" y="-82">OUT:=1</label>
       
     </transition>
 
@@ -196,8 +191,8 @@ broadcast chan chOUT,chON;
       <target ref="id6" />
       
       
-      <label kind="synchronisation" x="-747" y="-97">chOUT!</label>
-      <label kind="assignment" x="-747" y="-82">OUT:=0</label>
+      <label kind="synchronisation" x="-833" y="-97">chOUTiut!</label>
+      <label kind="assignment" x="-833" y="-82">OUT:=0</label>
       
     </transition>
 
@@ -216,8 +211,8 @@ broadcast chan chOUT,chON;
       <target ref="id7" />
       
       
-      <label kind="synchronisation" x="-878" y="-97">chON!</label>
-      <label kind="assignment" x="-878" y="-82">ON:=1</label>
+      <label kind="synchronisation" x="-984" y="-97">chONiut!</label>
+      <label kind="assignment" x="-984" y="-82">ON:=1</label>
       
     </transition>
 
@@ -236,8 +231,8 @@ broadcast chan chOUT,chON;
       <target ref="id8" />
       
       
-      <label kind="synchronisation" x="-1014" y="-97">chON!</label>
-      <label kind="assignment" x="-1014" y="-82">ON:=0</label>
+      <label kind="synchronisation" x="-1135" y="-97">chONiut!</label>
+      <label kind="assignment" x="-1135" y="-82">ON:=0</label>
       
     </transition>
 
@@ -490,7 +485,50 @@ broadcast chan chOUT,chON;
       
     </transition>
   </template>
+  <template>
+    <name x="5" y="5">dly</name>
+    <parameter>broadcast chan &amp;in, broadcast chan &amp;out</parameter>
+    <declaration>clock x;</declaration>
+    
+    <location id="id0" x="-83" y="-228">
+      <name x="-83" y="-213">idle</name>
+      
+      
+      
+      
+    </location>
 
-  <system>system iut, env;
+    <location id="id1" x="-83" y="-27">
+      <name x="-83" y="-12">in_transit</name>
+      <label kind="invariant" x="-83" y="3">x&lt;=DELAY</label>
+      
+      
+      
+    </location>
+    
+    <init ref="id0" />
+    
+    <transition>
+      <source ref="id0" />
+      <target ref="id1" />
+      
+      
+      <label kind="synchronisation" x="-68" y="-97">in?</label>
+      <label kind="assignment" x="-68" y="-82">x:=0</label>
+      
+    </transition>
+
+    <transition>
+      <source ref="id1" />
+      <target ref="id0" />
+      
+      
+      <label kind="synchronisation" x="-104" y="-97">out!</label>
+      
+      
+    </transition>
+  </template>
+
+  <system>//delay buffersINdly = dly(chIN,chINiut);RSTdly = dly(chRST,chRSTiut);OUTdly = dly(chOUT,chOUTiut);ONdly = dly(chON,chONiut);//templates in the systemsystem env,iut,INdly,RSTdly,OUTdly,ONdly;
 </system>
 </nta>
