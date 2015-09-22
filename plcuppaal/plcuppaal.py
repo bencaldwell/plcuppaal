@@ -104,7 +104,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==0",
-												synchronisation="i_"+sym+"_iut?")
+												synchronisation="i_"+sym+"?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -118,7 +118,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==1",
-												synchronisation="i_"+sym+"_iut?")
+												synchronisation="i_"+sym+"?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -133,7 +133,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=1",
-												synchronisation="o_"+sym+"_iut!")
+												synchronisation="o_"+sym+"!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -147,7 +147,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=0",
-												synchronisation="o_"+sym+"_iut!")
+												synchronisation="o_"+sym+"!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -180,7 +180,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==1",
-												synchronisation="o_"+sym+"?")
+												synchronisation="o_"+sym+"_env?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -193,7 +193,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==0",
-												synchronisation="o_"+sym+"?")
+												synchronisation="o_"+sym+"_env?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -208,7 +208,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=0",
-												synchronisation="i_"+sym+"!")
+												synchronisation="i_"+sym+"_env!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -221,7 +221,7 @@ class plcuppaal:
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=1",
-												synchronisation="i_"+sym+"!")
+												synchronisation="i_"+sym+"_env!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -256,14 +256,14 @@ class plcuppaal:
 		declitems.append("//input sync channels\r")
 		declitems.append("broadcast chan ")
 		for sym in self.inputs[:-1]:
-			declitems.append("i_"+sym+","+"i_"+sym+"_iut,")
-		declitems.append("i_"+self.inputs[-1]+","+"i_"+self.inputs[-1]+"_iut"+";\r\n")
+			declitems.append("i_"+sym+","+"i_"+sym+"_env,")
+		declitems.append("i_"+self.inputs[-1]+","+"i_"+self.inputs[-1]+"_env"+";\r\n")
 
 		declitems.append("//output sync channels\r")
 		declitems.append("broadcast chan ")
 		for sym in self.outputs[:-1]:
-			declitems.append("o_"+sym+","+"o_"+sym+"_iut,")
-		declitems.append("o_"+self.outputs[-1]+","+"o_"+self.outputs[-1]+"_iut"+";\r\n")
+			declitems.append("o_"+sym+","+"o_"+sym+"_env,")
+		declitems.append("o_"+self.outputs[-1]+","+"o_"+self.outputs[-1]+"_env"+";\r\n")
         
 		self.globaldeclaration =  ''.join(declitems)
 
@@ -271,14 +271,16 @@ class plcuppaal:
 		declitems = []
 		declitems.append("//delay buffers\r")
 		delaybuffers = []
+		# delay from env to iut
 		for sym in self.inputs:
 			buffname = sym + "dly"
-			declitems.append(buffname + " = " + self.dlyname + "(i_" + sym + ",i_"+sym+"_iut);\r")
+			declitems.append(buffname + " = " + self.dlyname + "(i_" + sym + "_env,i_"+sym+");\r")
 			delaybuffers.append(buffname)
 
+		# delay from iut to env
 		for sym in self.outputs:
 			buffname = sym + "dly"
-			declitems.append(buffname + " = " + self.dlyname + "(o_" + sym + ",o_"+sym+"_iut);\r")
+			declitems.append(buffname + " = " + self.dlyname + "(o_" + sym + ",o_"+sym+"_env);\r")
 			delaybuffers.append(buffname)
 
 		declitems.append("\r//templates in the system\r")

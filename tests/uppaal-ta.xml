@@ -4,16 +4,16 @@
   <declaration>//constantsconst int DELAY = 1000;
 //inputsint[0,1] IN, RST;
 //outputsint[0,1] OUT, ON;
-//input sync channelsbroadcast chan i_IN,i_IN_iut,i_RST,i_RST_iut;
-//output sync channelsbroadcast chan o_OUT,o_OUT_iut,o_ON,o_ON_iut;
+//input sync channelsbroadcast chan i_IN,i_IN_env,i_RST,i_RST_env;
+//output sync channelsbroadcast chan o_OUT,o_OUT_env,o_ON,o_ON_env;
 </declaration>
     <template>
     <name x="5" y="5">iut</name>
     
     <declaration></declaration>
     
-    <location id="id0" x="-630" y="-228">
-      <name x="-630" y="-213">id0</name>
+    <location id="id0" x="-556" y="-228">
+      <name x="-556" y="-213">id0</name>
       
       
       
@@ -28,56 +28,56 @@
       
     </location>
 
-    <location id="id2" x="-187" y="-27">
-      <name x="-187" y="-12">IN_on</name>
+    <location id="id2" x="-166" y="-27">
+      <name x="-166" y="-12">IN_on</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id3" x="-343" y="-27">
-      <name x="-343" y="-12">RST_off</name>
+    <location id="id3" x="-301" y="-27">
+      <name x="-301" y="-12">RST_off</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id4" x="-510" y="-27">
-      <name x="-510" y="-12">RST_on</name>
+    <location id="id4" x="-447" y="-27">
+      <name x="-447" y="-12">RST_on</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id5" x="-681" y="-27">
-      <name x="-681" y="-12">OUT_on</name>
+    <location id="id5" x="-591" y="-27">
+      <name x="-591" y="-12">OUT_on</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id6" x="-855" y="-27">
-      <name x="-855" y="-12">OUT_off</name>
+    <location id="id6" x="-733" y="-27">
+      <name x="-733" y="-12">OUT_off</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id7" x="-1021" y="-27">
-      <name x="-1021" y="-12">ON_on</name>
+    <location id="id7" x="-870" y="-27">
+      <name x="-870" y="-12">ON_on</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id8" x="-1219" y="-27">
-      <name x="-1219" y="-12">ON_off</name>
+    <location id="id8" x="-1035" y="-27">
+      <name x="-1035" y="-12">ON_off</name>
       
       
       <committed />
@@ -91,7 +91,7 @@
       <target ref="id1" />
       
       <label kind="guard" x="-61" y="-112">IN==0</label>
-      <label kind="synchronisation" x="-61" y="-97">i_IN_iut?</label>
+      <label kind="synchronisation" x="-61" y="-97">i_IN?</label>
       
       
     </transition>
@@ -110,8 +110,8 @@
       <source ref="id0" />
       <target ref="id2" />
       
-      <label kind="guard" x="-208" y="-112">IN==1</label>
-      <label kind="synchronisation" x="-208" y="-97">i_IN_iut?</label>
+      <label kind="guard" x="-187" y="-112">IN==1</label>
+      <label kind="synchronisation" x="-187" y="-97">i_IN?</label>
       
       
     </transition>
@@ -130,8 +130,8 @@
       <source ref="id0" />
       <target ref="id3" />
       
-      <label kind="guard" x="-365" y="-112">RST==0</label>
-      <label kind="synchronisation" x="-365" y="-97">i_RST_iut?</label>
+      <label kind="guard" x="-323" y="-112">RST==0</label>
+      <label kind="synchronisation" x="-323" y="-97">i_RST?</label>
       
       
     </transition>
@@ -150,8 +150,8 @@
       <source ref="id0" />
       <target ref="id4" />
       
-      <label kind="guard" x="-531" y="-112">RST==1</label>
-      <label kind="synchronisation" x="-531" y="-97">i_RST_iut?</label>
+      <label kind="guard" x="-468" y="-112">RST==1</label>
+      <label kind="synchronisation" x="-468" y="-97">i_RST?</label>
       
       
     </transition>
@@ -171,8 +171,8 @@
       <target ref="id5" />
       
       
-      <label kind="synchronisation" x="-702" y="-97">o_OUT_iut!</label>
-      <label kind="assignment" x="-702" y="-82">OUT:=1</label>
+      <label kind="synchronisation" x="-612" y="-97">o_OUT!</label>
+      <label kind="assignment" x="-612" y="-82">OUT:=1</label>
       
     </transition>
 
@@ -191,8 +191,8 @@
       <target ref="id6" />
       
       
-      <label kind="synchronisation" x="-876" y="-97">o_OUT_iut!</label>
-      <label kind="assignment" x="-876" y="-82">OUT:=0</label>
+      <label kind="synchronisation" x="-749" y="-97">o_OUT!</label>
+      <label kind="assignment" x="-749" y="-82">OUT:=0</label>
       
     </transition>
 
@@ -211,8 +211,8 @@
       <target ref="id7" />
       
       
-      <label kind="synchronisation" x="-1041" y="-97">o_ON_iut!</label>
-      <label kind="assignment" x="-1041" y="-82">ON:=1</label>
+      <label kind="synchronisation" x="-883" y="-97">o_ON!</label>
+      <label kind="assignment" x="-883" y="-82">ON:=1</label>
       
     </transition>
 
@@ -231,8 +231,8 @@
       <target ref="id8" />
       
       
-      <label kind="synchronisation" x="-1203" y="-97">o_ON_iut!</label>
-      <label kind="assignment" x="-1203" y="-82">ON:=0</label>
+      <label kind="synchronisation" x="-1020" y="-97">o_ON!</label>
+      <label kind="assignment" x="-1020" y="-82">ON:=0</label>
       
     </transition>
 
@@ -251,72 +251,72 @@
     
     <declaration></declaration>
     
-    <location id="id0" x="-570" y="-228">
-      <name x="-570" y="-213">id0</name>
+    <location id="id0" x="-713" y="-228">
+      <name x="-713" y="-213">id0</name>
       
       
       
       
     </location>
 
-    <location id="id1" x="-40" y="-27">
-      <name x="-40" y="-12">OUT_on</name>
+    <location id="id1" x="-53" y="-27">
+      <name x="-53" y="-12">OUT_on</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id2" x="-189" y="-27">
-      <name x="-189" y="-12">OUT_off</name>
+    <location id="id2" x="-239" y="-27">
+      <name x="-239" y="-12">OUT_off</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id3" x="-331" y="-27">
-      <name x="-331" y="-12">ON_on</name>
+    <location id="id3" x="-418" y="-27">
+      <name x="-418" y="-12">ON_on</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id4" x="-466" y="-27">
-      <name x="-466" y="-12">ON_off</name>
+    <location id="id4" x="-590" y="-27">
+      <name x="-590" y="-12">ON_off</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id5" x="-592" y="-27">
-      <name x="-592" y="-12">IN_off</name>
+    <location id="id5" x="-754" y="-27">
+      <name x="-754" y="-12">IN_off</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id6" x="-711" y="-27">
-      <name x="-711" y="-12">IN_on</name>
+    <location id="id6" x="-908" y="-27">
+      <name x="-908" y="-12">IN_on</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id7" x="-840" y="-27">
-      <name x="-840" y="-12">RST_off</name>
+    <location id="id7" x="-1073" y="-27">
+      <name x="-1073" y="-12">RST_off</name>
       
       
       <committed />
       
     </location>
 
-    <location id="id8" x="-1014" y="-27">
-      <name x="-1014" y="-12">RST_on</name>
+    <location id="id8" x="-1283" y="-27">
+      <name x="-1283" y="-12">RST_on</name>
       
       
       <committed />
@@ -329,8 +329,8 @@
       <source ref="id0" />
       <target ref="id1" />
       
-      <label kind="guard" x="-62" y="-112">OUT==1</label>
-      <label kind="synchronisation" x="-62" y="-97">o_OUT?</label>
+      <label kind="guard" x="-74" y="-112">OUT==1</label>
+      <label kind="synchronisation" x="-74" y="-97">o_OUT_env?</label>
       
       
     </transition>
@@ -349,8 +349,8 @@
       <source ref="id0" />
       <target ref="id2" />
       
-      <label kind="guard" x="-210" y="-112">OUT==0</label>
-      <label kind="synchronisation" x="-210" y="-97">o_OUT?</label>
+      <label kind="guard" x="-260" y="-112">OUT==0</label>
+      <label kind="synchronisation" x="-260" y="-97">o_OUT_env?</label>
       
       
     </transition>
@@ -369,8 +369,8 @@
       <source ref="id0" />
       <target ref="id3" />
       
-      <label kind="guard" x="-352" y="-112">ON==1</label>
-      <label kind="synchronisation" x="-352" y="-97">o_ON?</label>
+      <label kind="guard" x="-439" y="-112">ON==1</label>
+      <label kind="synchronisation" x="-439" y="-97">o_ON_env?</label>
       
       
     </transition>
@@ -389,8 +389,8 @@
       <source ref="id0" />
       <target ref="id4" />
       
-      <label kind="guard" x="-487" y="-112">ON==0</label>
-      <label kind="synchronisation" x="-487" y="-97">o_ON?</label>
+      <label kind="guard" x="-612" y="-112">ON==0</label>
+      <label kind="synchronisation" x="-612" y="-97">o_ON_env?</label>
       
       
     </transition>
@@ -410,8 +410,8 @@
       <target ref="id5" />
       
       
-      <label kind="synchronisation" x="-609" y="-97">i_IN!</label>
-      <label kind="assignment" x="-609" y="-82">IN:=0</label>
+      <label kind="synchronisation" x="-775" y="-97">i_IN_env!</label>
+      <label kind="assignment" x="-775" y="-82">IN:=0</label>
       
     </transition>
 
@@ -430,8 +430,8 @@
       <target ref="id6" />
       
       
-      <label kind="synchronisation" x="-723" y="-97">i_IN!</label>
-      <label kind="assignment" x="-723" y="-82">IN:=1</label>
+      <label kind="synchronisation" x="-925" y="-97">i_IN_env!</label>
+      <label kind="assignment" x="-925" y="-82">IN:=1</label>
       
     </transition>
 
@@ -450,8 +450,8 @@
       <target ref="id7" />
       
       
-      <label kind="synchronisation" x="-853" y="-97">i_RST!</label>
-      <label kind="assignment" x="-853" y="-82">RST:=0</label>
+      <label kind="synchronisation" x="-1094" y="-97">i_RST_env!</label>
+      <label kind="assignment" x="-1094" y="-82">RST:=0</label>
       
     </transition>
 
@@ -470,8 +470,8 @@
       <target ref="id8" />
       
       
-      <label kind="synchronisation" x="-999" y="-97">i_RST!</label>
-      <label kind="assignment" x="-999" y="-82">RST:=1</label>
+      <label kind="synchronisation" x="-1268" y="-97">i_RST_env!</label>
+      <label kind="assignment" x="-1268" y="-82">RST:=1</label>
       
     </transition>
 
@@ -529,6 +529,6 @@
     </transition>
   </template>
 
-  <system>//delay buffersINdly = dly(i_IN,i_IN_iut);RSTdly = dly(i_RST,i_RST_iut);OUTdly = dly(o_OUT,o_OUT_iut);ONdly = dly(o_ON,o_ON_iut);//templates in the systemsystem env,iut,INdly,RSTdly,OUTdly,ONdly;
+  <system>//delay buffersINdly = dly(i_IN_env,i_IN);RSTdly = dly(i_RST_env,i_RST);OUTdly = dly(o_OUT,o_OUT_env);ONdly = dly(o_ON,o_ON_env);//templates in the systemsystem env,iut,INdly,RSTdly,OUTdly,ONdly;
 </system>
 </nta>
