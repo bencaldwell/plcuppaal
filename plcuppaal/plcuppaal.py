@@ -98,13 +98,13 @@ class plcuppaal:
 		for sym in self.inputs:
 			#false guard transition
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="in"+sym+"Off",
+			location = pyuppaal.Location(	name=sym+"_off",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==0",
-												synchronisation="ch"+sym+"iut?")
+												synchronisation="i_"+sym+"_iut?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -112,13 +112,13 @@ class plcuppaal:
 
 			#true guard transition
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="in"+sym+"On",
+			location = pyuppaal.Location(	name=sym+"_on",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==1",
-												synchronisation="ch"+sym+"iut?")
+												synchronisation="i_"+sym+"_iut?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -127,13 +127,13 @@ class plcuppaal:
 		for sym in self.outputs:
 			#assign a true value to an output and sync
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="out"+sym+"On",
+			location = pyuppaal.Location(	name=sym+"_on",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=1",
-												synchronisation="ch"+sym+"iut!")
+												synchronisation="o_"+sym+"_iut!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -141,13 +141,13 @@ class plcuppaal:
 
 			#assign a false value to an output and sync
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="out"+sym+"Off",
+			location = pyuppaal.Location(	name=sym+"_off",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=0",
-												synchronisation="ch"+sym+"iut!")
+												synchronisation="o_"+sym+"_iut!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -174,26 +174,26 @@ class plcuppaal:
 		transitions = []
 		for sym in self.outputs:
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="out"+sym+"On",
+			location = pyuppaal.Location(	name=sym+"_on",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==1",
-												synchronisation="ch"+sym+"?")
+												synchronisation="o_"+sym+"?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
 			transitions.append(transition)
 
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="out"+sym+"Off",
+			location = pyuppaal.Location(	name=sym+"_off",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation, 
 												target=location,
 												guard=sym+"==0",
-												synchronisation="ch"+sym+"?")
+												synchronisation="o_"+sym+"?")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location, 
 												target=initlocation)
@@ -202,26 +202,26 @@ class plcuppaal:
 		for sym in self.inputs:
 			#assign a value to an output and sync
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="in"+sym+"Off",
+			location = pyuppaal.Location(	name=sym+"_off",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=0",
-												synchronisation="ch"+sym+"!")
+												synchronisation="i_"+sym+"!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
 			transitions.append(transition)
 
 			#create a committed location simply to spread the graph out
-			location = pyuppaal.Location(	name="in"+sym+"On",
+			location = pyuppaal.Location(	name=sym+"_on",
 											committed=True)
 			locations.append(location)
 			transition = pyuppaal.Transition(	source=initlocation,
 												target=location,
 												assignment=sym+":=1",
-												synchronisation="ch"+sym+"!")
+												synchronisation="i_"+sym+"!")
 			transitions.append(transition)
 			transition = pyuppaal.Transition(	source=location,
 												target=initlocation)
@@ -256,14 +256,14 @@ class plcuppaal:
 		declitems.append("//input sync channels\r")
 		declitems.append("broadcast chan ")
 		for sym in self.inputs[:-1]:
-			declitems.append("ch"+sym+","+"ch"+sym+"iut,")
-		declitems.append("ch"+self.inputs[-1]+","+"ch"+self.inputs[-1]+"iut"+";\r\n")
+			declitems.append("i_"+sym+","+"i_"+sym+"_iut,")
+		declitems.append("i_"+self.inputs[-1]+","+"i_"+self.inputs[-1]+"_iut"+";\r\n")
 
 		declitems.append("//output sync channels\r")
 		declitems.append("broadcast chan ")
 		for sym in self.outputs[:-1]:
-			declitems.append("ch"+sym+","+"ch"+sym+"iut,")
-		declitems.append("ch"+self.outputs[-1]+","+"ch"+self.outputs[-1]+"iut"+";\r\n")
+			declitems.append("o_"+sym+","+"o_"+sym+"_iut,")
+		declitems.append("o_"+self.outputs[-1]+","+"o_"+self.outputs[-1]+"_iut"+";\r\n")
         
 		self.globaldeclaration =  ''.join(declitems)
 
@@ -273,12 +273,12 @@ class plcuppaal:
 		delaybuffers = []
 		for sym in self.inputs:
 			buffname = sym + "dly"
-			declitems.append(buffname + " = " + self.dlyname + "(ch" + sym + ",ch"+sym+"iut);\r")
+			declitems.append(buffname + " = " + self.dlyname + "(i_" + sym + ",i_"+sym+"_iut);\r")
 			delaybuffers.append(buffname)
 
 		for sym in self.outputs:
 			buffname = sym + "dly"
-			declitems.append(buffname + " = " + self.dlyname + "(ch" + sym + ",ch"+sym+"iut);\r")
+			declitems.append(buffname + " = " + self.dlyname + "(o_" + sym + ",o_"+sym+"_iut);\r")
 			delaybuffers.append(buffname)
 
 		declitems.append("\r//templates in the system\r")
